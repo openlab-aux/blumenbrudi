@@ -1,0 +1,86 @@
+esphome:
+  name: gaertnerbot
+  platform: esp8266
+  board: nodemcuv2
+
+wifi:
+  ssid: "Labor 2.0"
+  password: "nerdhoehle2"
+  fast_connect: true
+logger:
+web_server:
+  port: 80
+ota:
+  password: "olaota!1"
+api:
+  password: "olagr0wth!1"
+switch:
+  - platform: gpio
+    name: "gaertnerbot_builtin"
+    pin:
+      number: 2
+      inverted: true
+  - platform: gpio
+    id: "gaertnerbot_motor_0"
+    name: "gaertnerbot_motor_0"
+    pin: D3
+    on_turn_on:
+      then:
+        - switch.turn_off: gaertnerbot_motor_1
+  - platform: gpio
+    name: "gaertnerbot_motor_1"
+    id: "gaertnerbot_motor_1"
+    pin: D4
+    on_turn_on:
+      then:
+        - switch.turn_off: gaertnerbot_motor_0
+  - platform: gpio
+    name: "gaertnerbot_motor_enable"
+    id: "gaertnerbot_motor_enable"
+    pin: D6
+    on_turn_off:
+      then:
+        - switch.turn_off: gaertnerbot_motor_0
+        - switch.turn_off: gaertnerbot_motor_1
+# TODO: Display. Perhaps usefull: https://www.hackerspace-ffm.de/wiki/index.php?title=Heltec_Wifi_LoRa_32
+i2c:
+  sda: D1
+  scl: D2
+dallas:
+  - pin: D5
+sensor:
+  - platform: dallas
+    address: 0x2C01193C9387AB28
+    name: "soil_temperature_0"
+  - platform: dallas
+    address: 0x6101193C67025828
+    name: "soil_temperature_1"
+  - platform: dallas
+    address: 0xC101193C65243828
+    name: "soil_temperature_2"
+  - platform: bme280
+    temperature:
+      name: "air_temperature"
+      id: temperature
+      accuracy_decimals: 2
+    pressure:
+      name: "air_pressure"
+      id: pressure
+      accuracy_decimals: 2
+    humidity:
+      name: "air_humidity"
+      id: humidity
+      accuracy_decimals: 2
+    address: 0x76
+    update_interval: 1s
+  - platform: template
+    name: "air_absolute_humidity"
+    unit_of_measurement: "g/m³"
+    lambda: |-
+      const float mw = 18.01534;    // molar mass of water g/mol
+      const float r = 8.31447215;   // Universal gas constant J/mol/K
+      return (6.112 * powf(2.718281828, (17.67 * id(temperature).state) /
+        (id(temperature).state + 243.5)) * id(humidity).state * mw) /
+        ((273.15 + id(temperature).state) * r); // in grams/m^3
+    accuracy_decimals: 2
+    update_interval: 1s
