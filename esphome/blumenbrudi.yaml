@@ -37,6 +37,7 @@ sensor:
   - platform: custom
     lambda: |-
       auto my_chirp_0 = new ChirpComponent();
+      my_chirp_0->set_i2c_address(0x20);
       App.register_component(my_chirp_0 );
       return {my_chirp_0};
     sensors:
@@ -74,7 +75,7 @@ sensor:
       id: humidity
       accuracy_decimals: 2
     address: 0x76
-    update_interval: 1s
+    update_interval: 5s
   - platform: template
     name: "air_absolute_humidity"
     unit_of_measurement: "g/m³"
@@ -85,7 +86,19 @@ sensor:
         (id(temperature).state + 243.5)) * id(humidity).state * mw) /
         ((273.15 + id(temperature).state) * r); // in grams/m^3
     accuracy_decimals: 2
-    update_interval: 10s
+    update_interval: 5s
+  - platform: scd30
+    co2:
+      name: "air_co2"
+      accuracy_decimals: 1
+    temperature:
+      name: "air_temperature_2"
+      accuracy_decimals: 2
+    humidity:
+      name: "air_humidity_2"
+      accuracy_decimals: 1
+    address: 0x61
+    update_interval: 5s
 
 switch:
   - platform: gpio
@@ -115,14 +128,17 @@ display:
     pages:
       - id: chirps
         lambda: |-
-          it.printf(0, 8, id(my_font), "Chirp 0: %.0f", id(chirp_humidity_0).state);
+#          it.printf(0, 8, id(my_font), "Chirp 0: %.0f", id(chirp_humidity_0).state);
 #    it.printf(0, 24, id(my_font), "Chirp 1: %.0f", id(chirp_humidity_1).state);
+      - id: air
+        lambda: |-
+          it.print(0, 0, id(my_font), "Air data:");
+          it.printf(0, 16, id(my_font), "Temp: %f°C", id(temperature).state);
+          it.printf(0, 32, id(my_font), "Rel hum: %f%%", id(humidity).state);
+          it.printf(0, 48, id(my_font), "Bar press: %f%%", id(pressure).state);
       - id: page1
         lambda: |-
           it.print(0, 0, id(my_font), "Hello World!");
-          it.print(0, 16, id(my_font), "Wir haben   ");
-          it.print(0, 32, id(my_font), "viel Platz  ");
-          it.print(0, 48, id(my_font), "fuer Text. :)");
 interval:
   - interval: 5s
     then:

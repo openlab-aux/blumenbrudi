@@ -14,7 +14,7 @@ logger:
 web_server:
   port: 80
 
-#prometheus:
+prometheus:
 
 ota:
   password: "olaota!1"
