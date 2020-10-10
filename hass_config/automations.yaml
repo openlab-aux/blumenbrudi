@@ -1,0 +1,78 @@
+- id: '1601937853325'
+  alias: Licht an morgens
+  description: Morgens (zum Sonnenaufgang) das Pflanzenlicht anschalten
+  trigger:
+  - platform: sun
+    event: sunrise
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 3112567a075b11ebbdd3c3c2bbd0375a
+    entity_id: switch.pflanzenlichtr1
+    domain: switch
+  - type: turn_on
+    device_id: 3112567a075b11ebbdd3c3c2bbd0375a
+    entity_id: switch.pflanzenlichtr2
+    domain: switch
+  - type: turn_on
+    device_id: 3112567a075b11ebbdd3c3c2bbd0375a
+    entity_id: switch.pflanzenlichtr3
+    domain: switch
+  mode: queued
+  max: 10
+- id: '1601937902117'
+  alias: Licht aus abends
+  description: Abends (zum Sonnenuntergang) das Pflanzenlicht ausschalten
+  trigger:
+  - platform: sun
+    event: sunset
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 3112567a075b11ebbdd3c3c2bbd0375a
+    entity_id: switch.pflanzenlichtr1
+    domain: switch
+  - type: turn_off
+    device_id: 3112567a075b11ebbdd3c3c2bbd0375a
+    entity_id: switch.pflanzenlichtr2
+    domain: switch
+  - type: turn_off
+    device_id: 3112567a075b11ebbdd3c3c2bbd0375a
+    entity_id: switch.pflanzenlichtr3
+    domain: switch
+  mode: queued
+  max: 10
+- id: '1602282944401'
+  alias: Alle 5 Minuten ein Foto für den Zeitraffer machen
+  description: 'TODO: Foto-Warn-Ampel schalten, Streaming-Service stoppen, während
+    kein Foto gemacht wird?'
+  trigger:
+  - platform: time_pattern
+    hours: '*'
+    minutes: /5
+    seconds: '23'
+  condition: []
+  action:
+  - service: camera.snapshot
+    data:
+      filename: /home/hass/webcam_snapshots/snapshot.jpg
+    entity_id: camera.webcam
+  - service: shell_command.move_current_webcam_snapshot
+    data: {}
+  mode: restart
+- id: '1602290811154'
+  alias: 'flipdot: Einfache stündliche Lüftungserinnerung'
+  description: 'TODO: spaceapi state conditional, später durch co2-measurement nach
+    bedarf triggern'
+  trigger:
+  - platform: time_pattern
+    hours: /1
+    minutes: '23'
+    seconds: '42'
+  condition: []
+  action:
+  - service: rest_command.flipdot
+    data:
+      text: 'COVID19-Prävention: Bitte stündlich (jetzt) lüften! Danke für den Schutz
+        deiner Mitmenschen. <3'
+  mode: restart

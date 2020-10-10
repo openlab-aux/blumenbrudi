@@ -1,0 +1,24 @@
+default_config:
+homeassistant:
+  whitelist_external_dirs:
+    - '/home/hass/webcam_snapshots'
+zeroconf:
+ssdp:
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+tts:
+  - platform: google_translate
+camera:
+  - platform: mjpeg
+    name: Webcam
+    mjpeg_url: http://172.16.16.174:8080/?action=stream
+shell_command:
+  move_current_webcam_snapshot: mv /home/hass/webcam_snapshots/snapshot.jpg /home/hass/webcam_snapshots/snapshot.`date +%s`.jpg
+rest_command:
+  flipdot:
+    url: 'https://flipdot.openlab-augsburg.de/api/v2/queue/add'
+    method: 'post'
+    content_type: 'application/x-www-form-urlencoded'
+    payload: 'text={{ text }}'
