@@ -1,31 +1,18 @@
 #include "esphome.h"
 
-class ChirpComponent : public PollingComponent, public Sensor, public I2CDevice {
+class ChirpComponent : public Component, public I2CDevice {
 	public:
-		ChirpComponent() : PollingComponent(5000) {}
+		Sensor *chirp_sensor = new Sensor();
+		ChirpComponent(I2CComponent *parent, uint8_t address, bool vref_default = false) : I2CDevice(parent, address) {
+			//this->vref_default_ = vref_default;
+		}
 
 		void setup() override {
-			//Wire.begin();
-			//update_addr(0x20, 0x20);
-			//update();
+			ESP_LOGCONFIG("chirp", "Setting up ChirpComponent at %#02x ...", address_);
 		}
 
-		void update() override {
-			//Wire.beginTransmission(0x20);
-			//Wire.write(0x00); // 0x00 is hum
-			//Wire.endTransmission();
-			//delay(1100);
-			//Wire.requestFrom(0x20, 2);
-			//unsigned int t = Wire.read() << 8;
-			//t = t | Wire.read();
-			//ESP_LOGD("chirp", "Humidity is: %i", t);
-			//publish_state(t);
-		}
+		//void update() override {
+		//	ESP_LOGCONFIG("chirp", "Updating values for ChirpComponent at %#02x ...", address_);
+		//}
 
-		void update_addr(int addr, int new_addr) {
-			Wire.beginTransmission(addr);
-			Wire.write(0x01); // 0x01 is write i2c addr
-			Wire.write(new_addr); // new addr
-			Wire.endTransmission();
-		}
 };

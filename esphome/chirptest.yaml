@@ -1,0 +1,43 @@
+esphome:
+  name: chirptest
+  platform: esp8266
+  board: nodemcuv2
+  includes:
+    - chirp.h
+
+wifi:
+  ssid: "Labor 2.0"
+  password: "nerdhoehle2"
+  fast_connect: true
+
+logger:
+
+web_server:
+  port: 80
+
+ota:
+  password: "olaota!1"
+
+api:
+  password: "olagr0wth!1"
+
+
+binary_sensor:
+  - platform: gpio
+    name: "Pin D0"
+    pin: D0
+
+i2c:
+  id: i2c_bus
+  sda: D1
+  scl: D2
+
+sensor:
+  - platform: custom
+    lambda: |-
+      auto my_chirp_0 = new ChirpComponent(i2c_bus, 0x20);
+      //App.register_component(my_chirp_0);
+      return {my_chirp_0->chirp_sensor};
+    sensors:
+      - name: "chirp_humidity_0"
+        id: "chirp_humidity_0"
