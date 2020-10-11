@@ -87,6 +87,11 @@ sensor:
         ((273.15 + id(temperature).state) * r); // in grams/m^3
     accuracy_decimals: 2
     update_interval: 5s
+  - platform: template
+    name: "air_dew_point"
+    lambda: return (243.5*(log(id(humidity).state/100)+((17.67*id(temperature).state)/(243.5+id(temperature).state)))/(17.67-log(id(humidity).state/100)-((17.67*id(temperature).state)/(243.5+id(temperature).state))));
+    unit_of_measurement: "°C"
+    icon: 'mdi:thermometer-alert'
   - platform: scd30
     co2:
       name: "air_co2"
