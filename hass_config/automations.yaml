@@ -76,3 +76,22 @@
       text: 'COVID19-Prävention: Bitte stündlich (jetzt) lüften! Danke für den Schutz
         deiner Mitmenschen. <3'
   mode: restart
+- id: '1603819142822'
+  alias: 'flipdot: CO2-PPM-abhängige Lüftungserinnerung'
+  description: ''
+  trigger:
+  - platform: time_pattern
+    minutes: /15
+    seconds: '42'
+    hours: '*'
+  condition:
+  - condition: numeric_state
+    entity_id: sensor.air_co2
+    above: '900'
+  action:
+  - service: rest_command.flipdot
+    data:
+      text: 'COVID19-Prävention: CO2-Wert hoch (ca. {{ states.sensor.air_co2.state
+        | round(0) }} ppm), bitte jetzt lüften! Danke für den Schutz deiner Mitmenschen.
+        <3'
+  mode: single
