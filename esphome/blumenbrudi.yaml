@@ -28,21 +28,21 @@ dallas:
 i2c:
   sda: GPIO4 # pin 4 sda
   scl: GPIO15 # pin 15 scl
-font:
-  - file: "luximr.ttf"
-    id: my_font
-    size: 16
+#font:
+#  - file: "luximr.ttf"
+#    id: my_font
+#    size: 16
 
 sensor:
-  - platform: custom
-    lambda: |-
-      auto my_chirp_0 = new ChirpComponent();
-      my_chirp_0->set_i2c_address(0x20);
-      App.register_component(my_chirp_0 );
-      return {my_chirp_0};
-    sensors:
-      - name: "chirp_humidity_0"
-        id: "chirp_humidity_0"
+#  - platform: custom
+#    lambda: |-
+#      auto my_chirp_0 = new ChirpComponent();
+#      my_chirp_0->set_i2c_address(0x20);
+#      App.register_component(my_chirp_0 );
+#      return {my_chirp_0};
+#    sensors:
+#      - name: "chirp_humidity_0"
+#        id: "chirp_humidity_0"
 #  - platform: custom
 #    lambda: |-
 #      auto my_chirp_1 = new ChirpComponent();
@@ -124,28 +124,28 @@ switch:
       then:
         - switch.turn_off: blumenbrudi_motor_0
         - switch.turn_off: blumenbrudi_motor_1
-display:
-  - platform: ssd1306_i2c
-    id: my_display
-    model: "SSD1306 128x64"
-    reset_pin: GPIO16 # pin 16 rst
-    address: 0x3c
-    pages:
-      - id: chirps
-        lambda: |-
-#          it.printf(0, 8, id(my_font), "Chirp 0: %.0f", id(chirp_humidity_0).state);
-#    it.printf(0, 24, id(my_font), "Chirp 1: %.0f", id(chirp_humidity_1).state);
-      - id: air
-        lambda: |-
-          it.print(0, 0, id(my_font), "Air data:");
-          it.printf(0, 16, id(my_font), "Temp: %f°C", id(temperature).state);
-          it.printf(0, 32, id(my_font), "Rel hum: %f%%", id(humidity).state);
-          it.printf(0, 48, id(my_font), "Bar press: %f%%", id(pressure).state);
-      - id: page1
-        lambda: |-
-          it.print(0, 0, id(my_font), "Hello World!");
-interval:
-  - interval: 5s
-    then:
-      - display.page.show_next: my_display
-      - component.update: my_display
+#display:
+#  - platform: ssd1306_i2c
+#    id: my_display
+#    model: "SSD1306 128x64"
+#    reset_pin: GPIO16 # pin 16 rst
+#    address: 0x3c
+#    pages:
+#      - id: chirps
+#        lambda: |-
+##          it.printf(0, 8, id(my_font), "Chirp 0: %.0f", id(chirp_humidity_0).state);
+##    it.printf(0, 24, id(my_font), "Chirp 1: %.0f", id(chirp_humidity_1).state);
+#      - id: air
+#        lambda: |-
+#          it.print(0, 0, id(my_font), "Air data:");
+#          it.printf(0, 16, id(my_font), "Temp: %f°C", id(temperature).state);
+#          it.printf(0, 32, id(my_font), "Rel hum: %f%%", id(humidity).state);
+#          it.printf(0, 48, id(my_font), "Bar press: %f%%", id(pressure).state);
+#      - id: page1
+#        lambda: |-
+#          it.print(0, 0, id(my_font), "Hello World!");
+#interval:
+#  - interval: 5s
+#    then:
+#      - display.page.show_next: my_display
+#      - component.update: my_display
